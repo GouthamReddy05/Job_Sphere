@@ -1,0 +1,15 @@
+langchain
+langchain-community
+pdfplumber
+ollama
+flask
+google-search-results
+huggingface-hub
+pdfminer
+flask_cors
+flask_session
+python-dotenv
+nltk
+gensim
+PyPDF2
+python-docx
