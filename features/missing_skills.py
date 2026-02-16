@@ -233,19 +233,26 @@ Resume:
 def generate_missing_skills(role, candidate_skills):
 
     prompt = f"""
-You are a strict skill gap analyzer.
+You are an industry recruiter evaluating a CANDIDATE for an ENTRY-LEVEL {role} position.
 
-Target Role: {role}
+Important Rules:
+- Only consider ESSENTIAL skills required for an medium-level role.
+- Do NOT include advanced, research-level, or senior-level skills.
+- Do NOT suggest optional or nice-to-have tools.
+- If the candidate already has strong ML fundamentals, do NOT suggest redundant skills.
+- Be realistic and conservative.
+- If candidate already meets core requirements, return empty lists.
 
-Candidate Skills (Python list):
+Candidate Skills:
 {candidate_skills}
 
-Steps:
-1. Identify standard required skills for this role.
-2. Compare with candidate skills.
-3. Return ONLY missing skills.
+Your Task:
+1. Identify ONLY fundamental skills truly required for entry-level {role}.
+2. Compare carefully with candidate skills.
+3. Return ONLY missing ESSENTIAL skills.
+4. If nothing essential is missing, return empty arrays.
 
-Output STRICT JSON:
+Return STRICT JSON in this format:
 
 {{
   "Core Technical Skills": [],
@@ -255,7 +262,6 @@ Output STRICT JSON:
 
 Return ONLY JSON.
 """
-
     try:
         response = model.invoke([
             HumanMessage(content=prompt)
@@ -264,6 +270,7 @@ Return ONLY JSON.
 
     except Exception as e:
         return f"⚠️ Error generating response: {str(e)}"
+
 
 
 

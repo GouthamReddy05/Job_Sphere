@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException, Response, Depends, UploadFile, File,
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional
-import io
+import re
 import json
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
@@ -80,20 +80,30 @@ class JobMatchRequest(BaseModel):
     location: str
 
 
-# --- Helper Function to Validate Resume Content ---
 def check_file(text: str) -> bool:
-    """Checks if the text contains at least 5 common resume keywords."""
-    keywords = ["education", "experience", "skills", "projects", "certifications", "summary", "contact", "technical skills", "university", "college", "degree"]
-    keyword_set = set(keywords)
-    
-    found_keywords = set()
-    for word in text.lower().split():
-        if word in keyword_set:
-            found_keywords.add(word)
-            
-    if len(found_keywords) >= 5:
-        return True
-    return False
+    """Checks if the text contains at least 3 common resume sections."""
+
+    keywords = [
+        "education",
+        "experience",
+        "skills",
+        "projects",
+        "certifications",
+        "summary",
+        "contact",
+        "university",
+        "college",
+        "degree"
+    ]
+
+    text_lower = text.lower()
+
+    found_keywords = 0
+    for keyword in keywords:
+        if re.search(rf"\b{re.escape(keyword)}\b", text_lower):
+            found_keywords += 1
+
+    return found_keywords >= 3
 
 # async def extract_text_from_upload_file(file: UploadFile):
 #     """Extracts text from a PDF or DOCX file object."""
