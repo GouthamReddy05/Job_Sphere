@@ -11,7 +11,6 @@ ollama
 nltk
 numpy
 scipy
-gensim
 python-dotenv
 requests
 langchain
