@@ -7,12 +7,16 @@ from scipy.spatial.distance import cosine
 import pickle
 
 
-try:
-    with open("glove_model.pkl", "rb") as f:
-        glove_model = pickle.load(f)
-except FileNotFoundError:
-    print("Warning: 'glove_model.pkl' not found. Using simple keyword matching instead.")
-    glove_model = None
+glove_model = None
+
+def get_glove_model():
+    global glove_model
+    if glove_model is None:
+        with open("glove_model.pkl", "rb") as f:
+            glove_model = pickle.load(f)
+    return glove_model
+
+
 
 try:
     stop_words = set(stopwords.words('english'))
@@ -36,6 +40,9 @@ def get_document_vector(processed_tokens, model):
 def calculate_ats_score(resume_text, job_description_text):
     preprocessed_resume_text = pre_process_corrected(resume_text)
     preprocessed_description_text = pre_process_corrected(job_description_text)
+    
+    glove_model = get_glove_model()
+
 
     if glove_model:
         resume_vector = get_document_vector(preprocessed_resume_text, glove_model)
