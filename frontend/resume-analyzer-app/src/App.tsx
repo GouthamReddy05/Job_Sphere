@@ -101,29 +101,7 @@ const features: Feature[] = [
 ];
 
 
-const initializeUsers = (): User[] => {
-  try {
-    if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        return JSON.parse(stored);
-      }
-    }
-  } catch (error) {
-    console.warn('Could not load users from localStorage');
-  }
-  return [];
-};
 
-const saveUsers = (users: User[]) => {
-  try {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
-    }
-  } catch (error) {
-    console.warn('Could not save users to localStorage');
-  }
-};
 
 const AIResumeAnalyzer: React.FC = () => {
   // State Management
