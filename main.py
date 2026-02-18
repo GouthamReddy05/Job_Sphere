@@ -364,12 +364,12 @@ async def analyze_job_matches(request: JobMatchRequest):
         )
 
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-build_path = os.path.join(BASE_DIR, "frontend", "resume-analyzer-app", "build")
-if os.path.isdir(build_path):
-    app.mount("/", StaticFiles(directory=build_path, html=True), name="static")
+# BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# build_path = os.path.join(BASE_DIR, "frontend", "resume-analyzer-app", "build")
+# if os.path.isdir(build_path):
+#     app.mount("/", StaticFiles(directory=build_path, html=True), name="static")
 
 
-@app.get("/", include_in_schema=False)
-def serve_react():
-    return FileResponse(os.path.join(build_path, "index.html"))
+# @app.get("/", include_in_schema=False)
+# def serve_react():
+#     return FileResponse(os.path.join(build_path, "index.html"))
