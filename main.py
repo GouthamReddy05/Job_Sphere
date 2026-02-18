@@ -4,12 +4,8 @@ from pydantic import BaseModel
 from typing import Optional
 import re
 import json
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
 import hashlib
-import os
 
-# Import database and auth (Assuming these files exist and are correct)
 from database import db
 from auth import create_access_token, get_current_user, ACCESS_TOKEN_EXPIRE_MINUTES, normalize_password
 
@@ -20,27 +16,18 @@ from features.project_ideas import generate_project_ideas
 from features.interview_prep import generate_interview_questions
 from features.live_jobs import run_job_agent
 
-import PyPDF2
-import docx
-from fastapi.exceptions import RequestValidationError
 
 app = FastAPI()
 
 
 origins = [
     "http://localhost:3000",
-    "http://localhost:5000",
-    "http://localhost:5001",
-    "http://localhost:8000",
-    "http://127.0.0.1:3000",
-    "http://127.0.0.1:5000",
-    "http://127.0.0.1:5001",
-    "http://127.0.0.1:8000",
+    "https://job-sphere-sjei.vercel.app"
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins, 
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
