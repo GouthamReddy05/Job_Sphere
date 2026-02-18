@@ -1,13 +1,10 @@
-from huggingface_hub import InferenceClient
 import json
-import ollama
 import os
 from langchain.chat_models import init_chat_model
 from langchain_core.messages import SystemMessage, HumanMessage
 
 
 
-client = InferenceClient()
 
 os.environ["GEMINI_API_KEY"] = os.getenv("gemini_api_key")
 

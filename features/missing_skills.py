@@ -1,7 +1,6 @@
 import io
 from PyPDF2 import PdfReader
 import docx
-from huggingface_hub import InferenceClient
 import os
 from dotenv import load_dotenv
 import re
@@ -11,11 +10,7 @@ from langchain_core.messages import SystemMessage, HumanMessage
 
 load_dotenv()
 
-# hf_api_key = os.getenv('huggingface_api_key')
-# if hf_api_key:
-#     client = InferenceClient(token=hf_api_key)
-# else:
-#     client = InferenceClient() 
+
 
 os.environ["GEMINI_API_KEY"] = os.getenv("gemini_api_key")
 
@@ -88,64 +83,6 @@ def extract_text_from_file(file_source):
     return text
 
 
-# def extract_text_from_file(file_source):
-#     """
-#     Reads a document from either a file path or a file-like object.
-
-#     Args:
-#         file_source: A file path (str) or a file-like object.
-
-#     Returns:
-#         The extracted text as a string.
-#     """
-#     text = ""
-#     filename = ""
-
-#     if hasattr(file_source, 'read'):
-#         # It's a file-like object (e.g., uploaded file in Flask)
-#         filename = getattr(file_source, 'filename', 'uploaded_file')
-#         content_stream = io.BytesIO(file_source.read())
-#         file_source.seek(0)
-
-#     elif isinstance(file_source, str):
-#         # It's a file path
-#         if not os.path.exists(file_source):
-#             raise FileNotFoundError(f"No such file: '{file_source}'")
-#         filename = file_source
-#         content_stream = file_source  # Keep path for PyPDF2/docx
-
-#     else:
-#         raise TypeError("Input must be a file path (string) or a file-like object.")
-
-#     # --- Handle PDF ---
-#     if filename.lower().endswith('.pdf'):
-#         if isinstance(content_stream, str):  # file path
-#             reader = PdfReader(content_stream)
-#         else:  # file-like
-#             reader = PdfReader(content_stream)
-#         for page in reader.pages:
-#             page_text = page.extract_text()
-#             if page_text:
-#                 text += page_text + "\n"
-
-#     # --- Handle DOCX ---
-#     elif filename.lower().endswith('.docx'):
-#         if isinstance(content_stream, str):  # file path
-#             document = docx.Document(content_stream)
-#         else:  # file-like
-#             document = docx.Document(content_stream)
-#         for para in document.paragraphs:
-#             text += para.text + "\n"
-
-#     else:
-#         raise ValueError("Unsupported file type. Please provide a PDF or DOCX file.")
-
-#     return text
-
-
-
-
-# print(extract_ordered_text_pdf("Resume.pdf"))
 
 def send_text_to_llm(text):
     

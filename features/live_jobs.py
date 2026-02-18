@@ -1,10 +1,6 @@
 import os
 import requests
 from dotenv import load_dotenv
-from langchain.tools import tool
-from langchain_ollama import OllamaLLM
-from langchain.agents import create_agent
-
 
 load_dotenv()
 
@@ -12,15 +8,14 @@ SERPAPI_API_KEY = os.getenv("serpapi_api_key")
 JOOBLE_API_KEY = os.getenv("jobble_api_key")
 
 if not SERPAPI_API_KEY:
-    raise ValueError("Missing serpapi_api_key in .env")
+    raise ValueError("Missing SERPAPI_API_KEY in environment")
 
 if not JOOBLE_API_KEY:
-    raise ValueError("Missing jobble_api_key in .env")
+    raise ValueError("Missing JOOBLE_API_KEY in environment")
 
 
-@tool
 def fetch_jobs_from_google(role_location: str) -> list:
-    """Fetch live job listings from Google Jobs via SerpApi using a 'role, location' string."""
+    """Fetch live job listings from Google Jobs via SerpApi."""
     if "," in role_location:
         role, location = [x.strip() for x in role_location.split(",", 1)]
     else:
@@ -36,10 +31,7 @@ def fetch_jobs_from_google(role_location: str) -> list:
         "api_key": SERPAPI_API_KEY
     }
 
-    response = requests.get(
-        "https://serpapi.com/search?engine=google_jobs",
-        params=params
-    )
+    response = requests.get("https://serpapi.com/search", params=params)
 
     if response.status_code != 200:
         return []
@@ -53,16 +45,12 @@ def fetch_jobs_from_google(role_location: str) -> list:
             "location": job.get("location", "N/A"),
             "link": job.get("apply_options", [{}])[0].get("link", "#")
         }
-        for job in jobs
+        for job in jobs[:5]
     ]
 
 
-@tool
-def fetch_jobs_from_jooble(role_location: str | list) -> list:
-    """Search for job vacancies on Jooble. Defaults to India if no location is provided."""
-    if isinstance(role_location, list):
-        role_location = ", ".join(role_location)
-
+def fetch_jobs_from_jooble(role_location: str) -> list:
+    """Search for job vacancies on Jooble."""
     if "," in role_location:
         role, location = [x.strip() for x in role_location.split(",", 1)]
     else:
@@ -70,7 +58,7 @@ def fetch_jobs_from_jooble(role_location: str | list) -> list:
         location = "India"
 
     url = f"https://jooble.org/api/{JOOBLE_API_KEY}"
-    headers = {"Content-type": "application/json"}
+    headers = {"Content-Type": "application/json"}
     payload = {"keywords": role, "location": location, "page": 1}
 
     try:
@@ -94,8 +82,8 @@ def fetch_jobs_from_jooble(role_location: str | list) -> list:
         return []
 
 
-
 def dedupe_jobs(jobs: list) -> list:
+    """Remove duplicate jobs based on title, company, and location."""
     seen = set()
     unique = []
 
@@ -108,67 +96,34 @@ def dedupe_jobs(jobs: list) -> list:
     return unique
 
 
-@tool
 def fetch_jobs_smart(role_location: str) -> list:
-
-    """Combined tool that searches both Google and Jooble, then removes duplicates."""
-
+    """Fetch jobs from both sources and remove duplicates."""
     combined_jobs = []
 
     print("🔎 Fetching from Jooble...")
-    combined_jobs.extend(fetch_jobs_from_jooble.invoke(role_location))
+    combined_jobs.extend(fetch_jobs_from_jooble(role_location))
 
     print("🔎 Fetching from Google Jobs...")
-    combined_jobs.extend(fetch_jobs_from_google.invoke(role_location))
+    combined_jobs.extend(fetch_jobs_from_google(role_location))
 
     return dedupe_jobs(combined_jobs)
 
 
-
-llm = OllamaLLM(
-    model="llama3",
-    temperature=0
-)
-
-tools = [fetch_jobs_smart]
-
-
-agent = create_agent(
-    model=llm,
-    tools=tools,
-    system_prompt="You are a professional job search assistant. Provide details in JSON format."
-)
-
 def run_job_agent(query: str) -> list:
     """
-    Safe wrapper for FastAPI.
+    FastAPI-safe wrapper.
     Always returns list[dict].
     """
     try:
-        result = agent.invoke({"input": query})
-
-        if isinstance(result, dict):
-            output = result.get("output", [])
-            if isinstance(output, list):
-                return output
-
+        return fetch_jobs_smart(query)
     except Exception as e:
-        print(f"Agent invoke failed, falling back to direct tool call: {e}")
-
-    try:
-        jobs = fetch_jobs_smart.invoke(query)
-        if isinstance(jobs, list):
-            return jobs
-    except Exception as e:
-        print(f"Fallback fetch_jobs_smart failed: {e}")
-
-    return []
-
+        print(f"❌ Job fetch failed: {e}")
+        return []
 
 
 if __name__ == "__main__":
     query = "Software Developer, India"
-    print("\n🤖 Agent Running...\n")
     jobs = run_job_agent(query)
+
     import json
     print(json.dumps(jobs, indent=2))

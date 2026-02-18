@@ -3,7 +3,6 @@ import nltk
 from nltk.corpus import stopwords
 import numpy as np
 from scipy.spatial.distance import cosine
-# from gensim.models import KeyedVectors
 import pickle
 
 
