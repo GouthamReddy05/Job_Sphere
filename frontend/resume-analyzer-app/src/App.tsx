@@ -187,7 +187,7 @@ const AIResumeAnalyzer: React.FC = () => {
     }
 
     try {
-      const response = await fetch('/api/auth/login', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/login`, {
         method: 'POST',
         credentials: "include",
         headers: { 'Content-Type': 'application/json' },
@@ -235,7 +235,7 @@ const AIResumeAnalyzer: React.FC = () => {
     }
 
     try {
-      const response = await fetch('/api/auth/signup', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/signup`, {
         method: 'POST',
         credentials: "include",
         headers: { 'Content-Type': 'application/json' },
@@ -265,7 +265,7 @@ const AIResumeAnalyzer: React.FC = () => {
 
   const handleLogout = async () => {
     try {
-      await fetch('/api/auth/logout', { method: 'POST', credentials: "include" });
+      await fetch(`${process.env.REACT_APP_API_URL}/api/auth/logout`, { method: 'POST', credentials: "include" });
     } catch (e) {
       console.error("Logout failed", e);
     }
@@ -354,7 +354,7 @@ const AIResumeAnalyzer: React.FC = () => {
 
     try {
       // Step 1: Process the resume and basic info
-      const processResponse = await fetch('/api/process-resume', {
+      const processResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/process-resume`, {
         method: 'POST',
         credentials: 'include',
         body: apiFormData,
@@ -374,7 +374,7 @@ const AIResumeAnalyzer: React.FC = () => {
         location: dashboardForm.location, // Added location for job matching
       };
 
-      const analyzeResponse = await fetch(`/api/analyze/${featureId}`, {
+      const analyzeResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/analyze/${featureId}`, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
