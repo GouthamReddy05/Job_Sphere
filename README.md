@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# Job_Sphere
-=======
 # Job_Sphere
 
 An advanced AI-powered platform to analyze resumes against job descriptions, identify missing skills, generate interview questions, and suggest project ideas. The system also fetches live job postings based on the user's role and location.
