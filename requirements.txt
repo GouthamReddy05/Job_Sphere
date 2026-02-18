@@ -17,3 +17,5 @@ langchain
 langchain-community
 langchain-google-genai
 gensim==4.3.2
+python-multipart==0.0.9
+
