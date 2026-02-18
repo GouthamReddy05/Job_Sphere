@@ -16,4 +16,4 @@ requests
 langchain
 langchain-community
 langchain-google-genai
-gensim
+gensim==4.3.2
