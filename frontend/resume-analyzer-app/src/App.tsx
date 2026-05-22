@@ -3,10 +3,10 @@ import { Shield, BookOpen, Lightbulb, MessageCircle, Clock, Eye, EyeOff, Upload,
 
 // --- Types ---
 
-interface User {
-  email: string;
-  password: string;
-}
+// interface User {
+//   email: string;
+//   password: string;
+// }
 
 interface job {
   title: string;
