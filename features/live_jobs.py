@@ -45,7 +45,7 @@ def fetch_jobs_from_google(role_location: str) -> list:
             "location": job.get("location", "N/A"),
             "link": job.get("apply_options", [{}])[0].get("link", "#")
         }
-        for job in jobs[:5]
+        for job in jobs[:10]
     ]
 
 
@@ -74,7 +74,7 @@ def fetch_jobs_from_jooble(role_location: str) -> list:
                 "location": job.get("location", "N/A"),
                 "link": job.get("link", "#")
             }
-            for job in jobs[:5]
+            for job in jobs[:10]
         ]
 
     except Exception as e:
