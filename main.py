@@ -20,11 +20,6 @@ from features.live_jobs import run_job_agent
 app = FastAPI()
 
 
-origins = [
-    "http://localhost:3000",
-    "https://job-sphere-piznst0fu-gouthams-projects-e026ae8f.vercel.app"
-]
-
 app.add_middleware(
     CORSMiddleware,
     allow_origin_regex=r"https://.*\.vercel\.app",
