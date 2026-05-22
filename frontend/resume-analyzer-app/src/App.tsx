@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Shield, BookOpen, Lightbulb, MessageCircle, Clock, Eye, EyeOff, Upload, MapPin, Briefcase, Calendar, User, Mail, Lock, ChevronRight, FileText, Target, Zap } from 'lucide-react';
 
 // --- Types ---
@@ -50,7 +50,7 @@ interface AnalysisResult {
 
 // --- Constants & Helper Functions ---
 
-const STORAGE_KEY = 'resume_analyzer_users';
+// const STORAGE_KEY = 'resume_analyzer_users';
 
 const indianCities = [
   'Mumbai', 'Delhi', 'Bangalore', 'Hyderabad', 'Chennai', 'Kolkata', 'Pune', 'Ahmedabad',
